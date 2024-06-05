@@ -33,11 +33,11 @@ nlp = spacy.blank("pt")
 # Define the training data with more examples
 TRAIN_DATA_CC = [
     ("Centro de Custo 1370390", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
-    ("Centro de Custo 1370390", {"entities": [(16, 24, "CENTRO_CUSTO")]}),
-    ("Centro de Custo 1370392", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
-    ("Centro de Custo 1370392", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
-    ("Centro de Custo 1370392", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
-    ("Centro de Custo 1370392", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
+    ("Centro de Custo 1360338", {"entities": [(16, 24, "CENTRO_CUSTO")]}),
+    ("Centro de Custo 1360304", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
+    ("Centro de Custo 1360297", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
+    ("Centro de Custo 1360304", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
+    ("Centro de Custo 1360460", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
     ("Centro de Custo 1370392", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
     ("Centro de Custo 1370066", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
     ("Centro de Custo 1370391", {"entities": [(16, 23, "CENTRO_CUSTO")]}),
@@ -58,7 +58,8 @@ for text, annotations in TRAIN_DATA_CC:
     ents = []
     for start, end, label in annotations.get("entities"):
         span = doc.char_span(start, end, label=label)
-        ents.append(span)
+        if span is not None:
+            ents.append(span)
     doc.ents = ents
     db.add(doc)
 db.to_disk("training_data_cc.spacy")
@@ -70,7 +71,7 @@ for _, annotations in TRAIN_DATA_CC:
         ner.add_label(ent[2])
 
 # Number of training iterations
-num_iterations = 300  # Increase the number of iterations for better training
+num_iterations = 1000  # Increase the number of iterations for better training
 
 # Adjust to avoid training warnings
 optimizer = nlp.begin_training()
