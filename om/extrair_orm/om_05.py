@@ -7,31 +7,25 @@ import fitz  # PyMuPDF
 # Define the input PDF path
 input_pdf_path = 'OM_00.pdf'
 
-# Read the input PDF with PyMuPDF
-input_pdf = fitz.open(input_pdf_path)
-
-# Function to check if the specified text range is present
-
 
 def check_text_range(text):
+    """
+    Check if the specified text range is present and extract relevant text.
+    """
     start_keyword = "Descrição Equipamento"
     end_keyword = "ORDEM DE MANUTENÇÃO"
 
     if start_keyword in text and end_keyword in text:
-        # Extract the text between the start and end keywords
         start_index = text.index(start_keyword)
         end_index = text.index(end_keyword) + len(end_keyword)
-        relevant_text = text[start_index:end_index].strip()
-        return relevant_text
+        return text[start_index:end_index].strip()
     return None
 
-# Function to extract information from the relevant text
 
-
-def extract_info(relevant_text):
-    # Print the relevant text for debugging
-    print("Relevant Text Extracted:\n", relevant_text)
-
+def extract_info(relevant_text, numero_om):
+    """
+    Extract information from the relevant text.
+    """
     # Define regex patterns
     numero_pattern = re.compile(r"\b\d{8}\b")  # 8-digit numbers
     centro_custo_pattern = re.compile(r"\b\d{7}\b")  # 7-digit numbers
@@ -41,11 +35,6 @@ def extract_info(relevant_text):
     numero_matches = numero_pattern.findall(relevant_text)
     centro_custo_matches = centro_custo_pattern.findall(relevant_text)
     criticidade_matches = criticidade_pattern.findall(relevant_text)
-
-    # Print the matches for debugging
-    print("Número Matches:", numero_matches)
-    print("Centro de Custo Matches:", centro_custo_matches)
-    print("Criticidade Matches:", criticidade_matches)
 
     # Extract "Descrição Equipamento"
     descricao_equipamento_match = re.search(
@@ -65,6 +54,7 @@ def extract_info(relevant_text):
         crit = criticidade_matches[i] if i < len(criticidade_matches) else ""
 
         combined_data.append({
+            "numero_om": numero_om,
             "numero": num,
             "descricao_equipamento": descricao_equipamento,
             "centro_custo": cc,
@@ -76,24 +66,41 @@ def extract_info(relevant_text):
     return combined_data
 
 
-# Loop through the pages in the PDF and check for the text range
-found_texts = []
-for page_num in range(input_pdf.page_count):
-    page = input_pdf.load_page(page_num)
-    text = page.get_text("text")
+def main():
+    """
+    Main function to process the PDF and extract information.
+    """
+    # Read the input PDF with PyMuPDF
+    input_pdf = fitz.open(input_pdf_path)
 
-    relevant_text = check_text_range(text)
-    if relevant_text:
-        found_texts.append(relevant_text)
+    # Loop through the pages in the PDF and check for the text range
+    found_texts = []
+    numero_om = None
+    for page_num in range(input_pdf.page_count):
+        page = input_pdf.load_page(page_num)
+        text = page.get_text("text")
+        relevant_text = check_text_range(text)
 
-# Extract information from the found texts
-extracted_data = []
-for text in found_texts:
-    extracted_data.extend(extract_info(text))
+        # Extract "N° OM" from the text
+        om_match = re.search(r"N° OM:\s*(\d{12})", text)
+        if om_match:
+            numero_om = om_match.group(1)
 
-# Save the data to a JSON file
-output_json_path = 'output_info.json'
-with open(output_json_path, 'w', encoding='utf-8') as file:
-    json.dump(extracted_data, file, indent=4, ensure_ascii=False)
+        if relevant_text:
+            found_texts.append((relevant_text, numero_om))
 
-print(f'Data extracted and saved to {output_json_path}')
+    # Extract information from the found texts
+    extracted_data = []
+    for text, om in found_texts:
+        extracted_data.extend(extract_info(text, om))
+
+    # Save the data to a JSON file
+    output_json_path = 'output_info.json'
+    with open(output_json_path, 'w', encoding='utf-8') as file:
+        json.dump(extracted_data, file, indent=4, ensure_ascii=False)
+
+    print(f'Data extracted and saved to {output_json_path}')
+
+
+if __name__ == "__main__":
+    main()

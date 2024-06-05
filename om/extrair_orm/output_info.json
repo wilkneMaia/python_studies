@@ -1,130 +1,182 @@
 [
     {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370390",
-        "criticidade": "A",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370390",
-        "criticidade": "A",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370066",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370391",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370391",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "11203035",
-        "descricao_equipamento": "FONTE RADIOATIVA - DX-2014-501",
-        "centro_custo": "1370392",
-        "criticidade": "A",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
-    },
-    {
-        "numero": "",
-        "descricao_equipamento": "",
-        "centro_custo": "1370392",
-        "criticidade": "B",
-        "tipo_contador": "",
-        "local_instalacao": ""
+        "equipamento": [
+            {
+                "numero_om": "202402644678",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370390",
+                "criticidade": "A",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370390",
+                "local_instalacao": "COSB-APD-ENE-SUB05-SE_2015_01",
+                "descricao_local_instalacao": "SUBESTACAO MOAGEM FLOTA SLB1, SE-2015-01"
+            },
+            {
+                "numero_om": "202402644844",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370390",
+                "criticidade": "A",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370390",
+                "local_instalacao": "COSB-APD-ENE-SUB05-SE_2015_03",
+                "descricao_local_instalacao": "SUBESTACAO MOAGEM FLOTA SLB2, SE-2015-03"
+            },
+            {
+                "numero_om": "202402645567",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_05",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, REJEITO CLEANER 1"
+            },
+            {
+                "numero_om": "202402645434",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_06",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, REJEITO CLEANER 1"
+            },
+            {
+                "numero_om": "202402645560",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_09",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, REJEITO CLEANER 1"
+            },
+            {
+                "numero_om": "202402645178",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_15",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, TRANS CLEANER 2"
+            },
+            {
+                "numero_om": "202402645427",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_24",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, TRANS CLEANER 2"
+            },
+            {
+                "numero_om": "202402645686",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370066",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370066",
+                "local_instalacao": "COSB-BCO-MOA-MOA01-CI_2014_11",
+                "descricao_local_instalacao": "HIDROCICLONE_CLASSIFICACAO MOAGEM SLB II"
+            },
+            {
+                "numero_om": "202402644943",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370391",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370391",
+                "local_instalacao": "COSB-BCO-PRE-PRE01-HP_2010_01",
+                "descricao_local_instalacao": "PRENSA DE ROLOS POLYSIUS_ HPGR"
+            },
+            {
+                "numero_om": "202402645089",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370391",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370391",
+                "local_instalacao": "COSB-BCO-PRE-PRE01-TR_2010_01",
+                "descricao_local_instalacao": "TRANSPORTADOR MOVEL DE CORREIA"
+            },
+            {
+                "numero_om": "202402645957",
+                "numero": "11203035",
+                "descricao_equipamento": "FONTE RADIOATIVA - DX-2014-501",
+                "centro_custo": "1370392",
+                "criticidade": "A",
+                "tipo_contador": "",
+                "identificacao_tecnica": "Características do Equipamento",
+                "local_instalacao": "1370392",
+                "descricao_local_instalacao": "A"
+            },
+            {
+                "numero_om": "202402586854",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_24",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, TRANS CLEANER 2"
+            },
+            {
+                "numero_om": "202402586859",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_15",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, TRANS CLEANER 2"
+            },
+            {
+                "numero_om": "202402587020",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_06",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, REJEITO CLEANER 1"
+            },
+            {
+                "numero_om": "202402587025",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_09",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, REJEITO CLEANER 1"
+            },
+            {
+                "numero_om": "202402587032",
+                "numero": "",
+                "descricao_equipamento": "",
+                "centro_custo": "1370392",
+                "criticidade": "B",
+                "tipo_contador": "",
+                "identificacao_tecnica": "1370392",
+                "local_instalacao": "COSB-BCO-FTC-FTC04-BP_2057_05",
+                "descricao_local_instalacao": "BOMBA RAD_CENTRIF, REJEITO CLEANER 1"
+            }
+        ]
     }
 ]
