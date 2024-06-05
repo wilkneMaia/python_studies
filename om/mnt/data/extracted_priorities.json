@@ -1,0 +1,10 @@
+{
+    "Prioridade": {
+        "Alta": 2,
+        "M\u00e9dia": 14
+    },
+    "Accuracy": 100.0,
+    "Total Expected": 16,
+    "Total Extracted": 18320,
+    "Correct Extracted": 16
+}

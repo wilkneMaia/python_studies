@@ -1,0 +1,25 @@
+{
+    "Prioridade": [
+        "Alta",
+        "Alta",
+        "Média",
+        "Média",
+        "Média",
+        "Média",
+        "Média",
+        "Média",
+        "Média",
+        "Média",
+        "ELE_REALIZAR",
+        "Média",
+        "Média",
+        "Média",
+        "Média",
+        "MédiMédia"
+    ],
+    "Metrics": {
+        "Total Extracted": 16,
+        "Expected Total": 16,
+        "Accuracy (%)": 100.0
+    }
+}
