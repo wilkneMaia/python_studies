@@ -3,96 +3,128 @@
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370390",
-        "criticidade": "A"
+        "criticidade": "A",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370390",
-        "criticidade": "A"
+        "criticidade": "A",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370066",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370391",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370391",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "11203035",
         "descricao_equipamento": "FONTE RADIOATIVA - DX-2014-501",
         "centro_custo": "1370392",
-        "criticidade": "A"
+        "criticidade": "A",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     },
     {
         "numero": "",
         "descricao_equipamento": "",
         "centro_custo": "1370392",
-        "criticidade": "B"
+        "criticidade": "B",
+        "tipo_contador": "",
+        "local_instalacao": ""
     }
 ]

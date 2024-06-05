@@ -29,35 +29,34 @@ def check_text_range(text):
 
 
 def extract_info(relevant_text):
+    # Print the relevant text for debugging
+    print("Relevant Text Extracted:\n", relevant_text)
+
     # Define regex patterns
     numero_pattern = re.compile(r"\b\d{8}\b")  # 8-digit numbers
     centro_custo_pattern = re.compile(r"\b\d{7}\b")  # 7-digit numbers
     criticidade_pattern = re.compile(r"\b[A-Z]\b")  # Single uppercase letters
-    tipo_contador_pattern = re.compile(
-        r"Tipo Contador\s*(.*?)\s*Nº Identificação Técnica", re.DOTALL)
-    termino_garantia_pattern = re.compile(
-        r"Término da Garantia\s*(.*?)\s*Fonte radioativa", re.DOTALL)
+    local_instalacao_pattern = re.compile(
+        r"Local de Instalação\s*(.*?)\s*Descrição do Local de Instalação", re.DOTALL)
 
     # Find all matches
     numero_matches = numero_pattern.findall(relevant_text)
     centro_custo_matches = centro_custo_pattern.findall(relevant_text)
     criticidade_matches = criticidade_pattern.findall(relevant_text)
-    tipo_contador_matches = tipo_contador_pattern.findall(relevant_text)
-    termino_garantia_matches = termino_garantia_pattern.findall(relevant_text)
+    local_instalacao_match = local_instalacao_pattern.search(relevant_text)
+
+    # Print the matches for debugging
+    print("Número Matches:", numero_matches)
+    print("Centro de Custo Matches:", centro_custo_matches)
+    print("Criticidade Matches:", criticidade_matches)
+    print("Local de Instalação Match:", local_instalacao_match.group(
+        1).strip() if local_instalacao_match else "")
 
     # Extract "Descrição Equipamento"
     descricao_equipamento_match = re.search(
         r"Descrição Equipamento\s*(.*?)\s*EQUIPAMENTO", relevant_text, re.DOTALL)
     descricao_equipamento = descricao_equipamento_match.group(
         1).strip() if descricao_equipamento_match else ""
-
-    # Extract "Tipo Contador"
-    tipo_contador = tipo_contador_matches[0].strip(
-    ) if tipo_contador_matches else ""
-
-    # Extract "Término da Garantia"
-    termino_garantia = termino_garantia_matches[0].strip(
-    ) if termino_garantia_matches else ""
 
     # Combine the results
     combined_data = []
@@ -66,13 +65,15 @@ def extract_info(relevant_text):
         num = numero_matches[i] if i < len(numero_matches) else ""
         cc = centro_custo_matches[i] if i < len(centro_custo_matches) else ""
         crit = criticidade_matches[i] if i < len(criticidade_matches) else ""
+        loc_inst = local_instalacao_match.group(
+            1).strip() if local_instalacao_match else ""
         combined_data.append({
             "numero": num,
             "descricao_equipamento": descricao_equipamento,
             "centro_custo": cc,
             "criticidade": crit,
-            "tipo_contador": tipo_contador,
-            "termino_garantia": termino_garantia
+            "tipo_contador": "",
+            "local_instalacao": loc_inst
         })
 
     return combined_data
