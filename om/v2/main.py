@@ -347,7 +347,7 @@ def main():
     Função principal para processar o PDF, extrair informações e salvar PDFs separados.
     """
     # Definir o caminho do PDF de entrada e as palavras-chave de separação
-    input_pdf_path = './pdf/OM_00.pdf'
+    input_pdf_path = './pdf/OM_01.pdf'
     start_keyword = "PERMISSÃO DE TRABALHO SEGURO"
     end_keyword = "HORAS APONTADAS"
     output_dir = "./output_pdfs"
