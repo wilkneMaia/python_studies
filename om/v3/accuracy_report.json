@@ -1,0 +1,14 @@
+{
+    "Total Extracted": {
+        "Centro de Custo": 35,
+        "Prioridade": 7210
+    },
+    "Expected Total": {
+        "Centro de Custo": 16,
+        "Prioridade": 16
+    },
+    "Accuracy (%)": {
+        "Centro de Custo": 218.75,
+        "Prioridade": 45062.5
+    }
+}
