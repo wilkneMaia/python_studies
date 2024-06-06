@@ -1,8 +1,74 @@
 import json
+import os
+import re
 
 import fitz  # PyMuPDF
 
 import pandas as pd
+
+
+def separate_documents(input_pdf_path, start_keyword, end_keyword):
+    """
+    Separa documentos dentro de um PDF com base em palavras-chave de início e fim.
+
+    :param input_pdf_path: Caminho para o arquivo PDF
+    :param start_keyword: Palavra-chave que marca o início de um documento
+    :param end_keyword: Palavra-chave que marca o fim de um documento
+    :return: Lista de textos dos documentos separados e números de páginas
+    """
+    input_pdf = fitz.open(input_pdf_path)
+    separated_texts = []
+    current_document = []
+    document_pages = []
+
+    for page_num in range(input_pdf.page_count):
+        page = input_pdf.load_page(page_num)
+        text = page.get_text("text")
+
+        if start_keyword in text and current_document:
+            separated_texts.append((current_document, document_pages))
+            current_document = []
+            document_pages = []
+
+        current_document.append(text)
+        document_pages.append(page_num)
+
+        if end_keyword in text and current_document:
+            separated_texts.append((current_document, document_pages))
+            current_document = []
+            document_pages = []
+
+    if current_document:
+        separated_texts.append((current_document, document_pages))
+
+    return separated_texts
+
+
+def save_separated_pdfs(input_pdf_path, separated_texts, output_dir):
+    """
+    Salva os documentos separados como arquivos PDF individuais.
+
+    :param input_pdf_path: Caminho para o arquivo PDF original
+    :param separated_texts: Lista de textos e números de páginas dos documentos separados
+    :param output_dir: Diretório de saída para os arquivos PDF separados
+    """
+    input_pdf = fitz.open(input_pdf_path)
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    for idx, (document_texts, document_pages) in enumerate(separated_texts):
+        output_pdf = fitz.open()
+
+        for page_num in document_pages:
+            output_pdf.insert_pdf(
+                input_pdf, from_page=page_num, to_page=page_num)
+
+        output_pdf_path = f"{output_dir}/document_{idx + 1}.pdf"
+        output_pdf.save(output_pdf_path)
+        output_pdf.close()
+
+        print(f"Documento separado salvo em: {output_pdf_path}")
 
 
 def extract_maintenance_order_data(file_path, page_number, initial_data, final_data):
@@ -276,20 +342,47 @@ def combine_fields(description_fields, equipment_fields, order_fields, note_fiel
     return combined_data
 
 
-# Exemplo de uso
-if __name__ == "__main__":
-    file_path = './pdf/OM_00.pdf'
-    try:
-        description_fields = extract_description(file_path, 0)
-        equipment_fields = extract_equipment_fields(file_path, 1)
-        order_fields = extract_maintenance_order_fields(file_path, 1)
-        note_fields = extract_maintenance_note_fields(file_path, 1)
+def main():
+    """
+    Função principal para processar o PDF, extrair informações e salvar PDFs separados.
+    """
+    # Definir o caminho do PDF de entrada e as palavras-chave de separação
+    input_pdf_path = './pdf/OM_00.pdf'
+    start_keyword = "PERMISSÃO DE TRABALHO SEGURO"
+    end_keyword = "HORAS APONTADAS"
+    output_dir = "./output_pdfs"
 
-        if description_fields and equipment_fields and order_fields and note_fields:
-            combined_data = combine_fields(
-                description_fields, equipment_fields, order_fields, note_fields)
-            save_to_json(combined_data, 'combined_maintenance_data.json')
-        else:
-            print("Não foi possível extrair dados suficientes para combinar.")
-    except Exception as e:
-        print(f"Erro durante o processamento: {e}")
+    # Separar documentos dentro do PDF
+    separated_texts = separate_documents(
+        input_pdf_path, start_keyword, end_keyword)
+
+    # Salvar documentos separados como arquivos PDF individuais
+    save_separated_pdfs(input_pdf_path, separated_texts, output_dir)
+
+    all_combined_data = []
+
+    for idx, (document, _) in enumerate(separated_texts):
+        file_path = f"{output_dir}/document_{idx + 1}.pdf"
+        try:
+            description_fields = extract_description(file_path, 0)
+            equipment_fields = extract_equipment_fields(file_path, 1)
+            order_fields = extract_maintenance_order_fields(file_path, 1)
+            note_fields = extract_maintenance_note_fields(file_path, 1)
+
+            if description_fields and equipment_fields and order_fields and note_fields:
+                combined_data = combine_fields(
+                    description_fields, equipment_fields, order_fields, note_fields)
+                all_combined_data.append(combined_data)
+            else:
+                print(
+                    f"Não foi possível extrair dados suficientes para combinar para o documento {idx + 1}.")
+        except Exception as e:
+            print(f"Erro durante o processamento do documento {idx + 1}: {e}")
+
+    # Salvar todos os dados combinados em um único arquivo JSON
+    json_file_path = f"{output_dir}/combined_maintenance_data.json"
+    save_to_json(all_combined_data, json_file_path)
+
+
+if __name__ == "__main__":
+    main()
