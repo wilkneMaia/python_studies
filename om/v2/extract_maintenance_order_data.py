@@ -225,7 +225,7 @@ def extract_maintenance_order_data(file_path, page_number):
         page_text = page.get_text()
 
         # Localizar as seções "ORDEM DE MANUTENÇÃO" e "NOTA DE MANUTENÇÃO"
-        order_start = page_text.find("N° OM:")
+        order_start = page_text.find("CENTRO EMITENTE:")
         note_start = page_text.find("OBSERVAÇÕES:")
 
         if order_start == -1 or note_start == -1:

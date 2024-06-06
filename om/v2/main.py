@@ -106,8 +106,8 @@ def find_value_after_label(df, label, offset=1):
 
 def extract_description(file_path, page_number):
 
-    initial_data = "EQUIPAMENTO"
-    final_data = "ORDEM DE MANUTENÇÃO"
+    initial_data = "CENTRO EMITENTE:"
+    final_data = "OBSERVAÇÕES:"
     df = extract_maintenance_order_data(
         file_path, page_number, initial_data, final_data)
 
@@ -116,8 +116,10 @@ def extract_description(file_path, page_number):
 
     try:
         extracted_fields = {
-            "N° OM:": find_value_after_label(df, "N° OM:", 5),
-            "DESCRIÇÃO OM:": find_value_after_label(df, "DESCRIÇÃO OM:", 5),
+            "om": find_value_after_label(df, "N° OM:", 1),
+            "issue_center": find_value_after_label(df, "CENTRO EMITENTE:", 1),
+            "center_plant": find_value_after_label(df, "CENTRO/PLANTA:", 1),
+            "om_description": find_value_after_label(df, "DESCRIÇÃO OM:", 1),
         }
 
         return extracted_fields
