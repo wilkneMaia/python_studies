@@ -325,13 +325,16 @@ def extract_maintenance_note_fields(file_path, page_number):
         return {}
 
 
-def combine_fields(om, equipment_fields, order_fields, note_fields):
-    """Combines equipment, maintenance order, and maintenance note fields into a single dictionary."""
+def combine_fields(description_fields, equipment_fields, order_fields, note_fields):
+    """Combines description, equipment, maintenance order, and maintenance note fields into a single dictionary."""
     combined_data = {
-        "om": om,
-        "equipment_fields": equipment_fields,
-        "order_fields": order_fields,
-        "note_fields": note_fields
+        "om": description_fields.get("om", ""),
+        "issue_center": description_fields.get("issue_center", ""),
+        "center_plant": description_fields.get("center_plant", ""),
+        "om_description": description_fields.get("om_description", ""),
+        **equipment_fields,
+        **order_fields,
+        **note_fields
     }
     return combined_data
 
@@ -363,7 +366,7 @@ def main():
 
             if om and equipment_fields and order_fields and note_fields:
                 combined_data = combine_fields(
-                    om, equipment_fields, order_fields, note_fields
+                    description_fields, equipment_fields, order_fields, note_fields
                 )
                 all_combined_data.append(combined_data)
             else:
