@@ -26,7 +26,7 @@ def show_pdf_content(file_path, page_number):
 
 if __name__ == "__main__":
     # Exemplo de uso
-    file_path = './pdf/OM_00.pdf'
+    file_path = './pdf/OM_ts2.pdf'
     page_number = 1  # Número da página que você quer visualizar
     show_pdf_content(file_path, page_number)
 

@@ -166,7 +166,7 @@ def find_value_after_label(df, label, offset=1):
 
 def extract_equipment_fields(file_path, page_number):
     """Extracts equipment fields from the PDF."""
-    initial_data = "EQUIPAMENTO"
+    initial_data = "OM"
     final_data = "ORDEM DE MANUTENÇÃO"
     df = extract_maintenance_order_data(
         file_path, page_number, initial_data, final_data)
@@ -175,19 +175,76 @@ def extract_equipment_fields(file_path, page_number):
         return {}
 
     try:
+        # Inicializa os campos
+        equipment_number = ""
+        description_equipment = ""
+
+        # Verifica o valor da terceira linha
+        third_line = df.iloc[2]['line'].strip()
+        print("Valor da terceira linha:", third_line)
+
+        if third_line != "EQUIPAMENTO":
+            equipment_number = find_value_after_label(
+                df, "Número", 12)
+            description_equipment = find_value_after_label(
+                df, "Descrição Equipamento", 1)
+            cost_center = find_value_after_label(df, "Centro de Custo", 12)
+            criticality = find_value_after_label(df, "Criticidade", 12)
+            installation_location = find_value_after_label(
+                df, "Local de Instalação", 11)
+            description_installation_location = find_value_after_label(
+                df, "Descrição do Local de Instalação", 11)
+            upper_installation_location = find_value_after_label(
+                df, "Local de Instalação Superior", 9)
+            description_upper_installation_location = find_value_after_label(
+                df, "Descrição do Local de Instalação Superior", 9)
+        else:
+            equipment_number = ""
+            description_equipment = ""
+            cost_center = find_value_after_label(df, "Centro de Custo", 11)
+            criticality = find_value_after_label(df, "Criticidade", 11)
+            installation_location = find_value_after_label(
+                df, "Local de Instalação", 9)
+            description_installation_location = find_value_after_label(
+                df, "Descrição do Local de Instalação", 9)
+            upper_installation_location = find_value_after_label(
+                df, "Local de Instalação Superior", 7)
+            description_upper_installation_location = find_value_after_label(
+                df, "Descrição do Local de Instalação Superior", 7)
+
+        # Coleta os campos restantes
         extracted_fields = {
-            "cost_center": find_value_after_label(df, "Centro de Custo", 11),
-            "criticality": find_value_after_label(df, "Criticidade", 11),
-            "installation_location": find_value_after_label(df, "Local de Instalação", 9),
-            "description_installation_location": find_value_after_label(df, "Descrição do Local de Instalação", 9),
-            "upper_installation_location": find_value_after_label(df, "Local de Instalação Superior", 7),
-            "description_upper_installation_location": find_value_after_label(df, "Descrição do Local de Instalação Superior", 7),
+            "equipment_number": equipment_number,
+            "description_equipment": description_equipment,
+            "cost_center": cost_center,
+            "criticality": criticality,
+            "installation_location": installation_location,
+            "description_installation_location": description_installation_location,
+            "upper_installation_location": upper_installation_location,
+            "description_upper_installation_location": description_upper_installation_location,
         }
+
         return extracted_fields
 
     except Exception as e:
         print(f"Error extracting fields: {e}")
         return {}
+
+
+# Função auxiliar find_value_after_label para encontrar valores após um rótulo específico
+def find_value_after_label(df, label, offset=1):
+    """Finds the value in the DataFrame after a specific label."""
+    try:
+        index = df[df['line'].str.contains(label, case=False, na=False)].index
+        if not index.empty:
+            value_index = index[0] + offset
+            if value_index < len(df):
+                value = df.iloc[value_index]['line'].strip()
+                return value
+        return None
+    except Exception as e:
+        print(f"Error finding value after label {label}: {e}")
+        return None
 
 
 def extract_maintenance_order_fields(file_path, page_number):

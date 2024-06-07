@@ -4,9 +4,6 @@ import re
 
 import fitz  # PyMuPDF
 
-from PyPDF3 import PdfFileReader
-from PyPDF3 import PdfFileWriter
-
 import pandas as pd
 
 
@@ -18,11 +15,10 @@ def create_directory(directory):
 
 def save_pdf_range(input_pdf, start_page, end_page, output_pdf_path):
     """Saves a range of pages as a separate PDF."""
-    pdf_writer = PdfFileWriter()
-    for page in range(start_page, end_page + 1):
-        pdf_writer.addPage(input_pdf.getPage(page))
-    with open(output_pdf_path, 'wb') as output_pdf_file:
-        pdf_writer.write(output_pdf_file)
+    pdf_writer = fitz.open()
+    for page_num in range(start_page, end_page + 1):
+        pdf_writer.insert_pdf(input_pdf, from_page=page_num, to_page=page_num)
+    pdf_writer.save(output_pdf_path)
     print(f"Saved PDF: {output_pdf_path}")
 
 
@@ -36,25 +32,21 @@ def save_to_excel(data, file_name):
 def process_pdf(input_pdf_path, output_folder, marker):
     """Processes the PDF to split documents based on the marker."""
     create_directory(output_folder)
-    input_pdf_fitz = fitz.open(input_pdf_path)
-    input_pdf_pypdf2 = PdfFileReader(input_pdf_path)
-
+    input_pdf = fitz.open(input_pdf_path)
     current_page = 0
     start_page = 0
     separated_texts = []
 
-    while current_page < input_pdf_pypdf2.getNumPages():
-        page = input_pdf_fitz.load_page(current_page)
+    while current_page < input_pdf.page_count:
+        page = input_pdf.load_page(current_page)
         text = page.get_text("text")
         normalized_text = " ".join(text.split())
 
         if marker in normalized_text and current_page != 0:
             end_page = current_page - 1
             output_pdf_path = os.path.join(
-                output_folder, f'document_{start_page + 1}_to_{end_page + 1}.pdf'
-            )
-            save_pdf_range(input_pdf_pypdf2, start_page,
-                           end_page, output_pdf_path)
+                output_folder, f'document_{start_page + 1}_to_{end_page + 1}.pdf')
+            save_pdf_range(input_pdf, start_page, end_page, output_pdf_path)
 
             description_fields = extract_description(output_pdf_path, 0)
             om = description_fields.get(
@@ -63,21 +55,19 @@ def process_pdf(input_pdf_path, output_folder, marker):
             os.rename(output_pdf_path, new_output_pdf_path)
 
             separated_texts.append((new_output_pdf_path, description_fields))
-
             start_page = current_page
 
         current_page += 1
 
-    if start_page < input_pdf_pypdf2.getNumPages():
+    if start_page < input_pdf.page_count:
         output_pdf_path = os.path.join(
-            output_folder, f'document_{start_page + 1}_to_{input_pdf_pypdf2.getNumPages()}.pdf'
-        )
-        save_pdf_range(input_pdf_pypdf2, start_page,
-                       input_pdf_pypdf2.getNumPages() - 1, output_pdf_path)
+            output_folder, f'document_{start_page + 1}_to_{input_pdf.page_count}.pdf')
+        save_pdf_range(input_pdf, start_page,
+                       input_pdf.page_count - 1, output_pdf_path)
 
         description_fields = extract_description(output_pdf_path, 0)
         om = description_fields.get(
-            "om", f"document_{start_page + 1}_to_{input_pdf_pypdf2.getNumPages()}")
+            "om", f"document_{start_page + 1}_to_{input_pdf.page_count}")
         new_output_pdf_path = os.path.join(output_folder, f'{om}.pdf')
         os.rename(output_pdf_path, new_output_pdf_path)
 
@@ -164,6 +154,19 @@ def find_value_after_label(df, label, offset=1):
         return None
 
 
+def find_cost_center(df):
+    """Finds the cost center value in the DataFrame."""
+    try:
+        text = " ".join(df['line'].tolist())
+        match = re.search(r'Centro de Custo\s*([\d]+)', text)
+        if match:
+            return match.group(1)
+        return None
+    except Exception as e:
+        print(f"Error finding cost center: {e}")
+        return None
+
+
 def extract_equipment_fields(file_path, page_number):
     """Extracts equipment fields from the PDF."""
     initial_data = "EQUIPAMENTO"
@@ -175,14 +178,35 @@ def extract_equipment_fields(file_path, page_number):
         return {}
 
     try:
+        equipment_number = ""
+        description_equipment = ""
+
+        characteristics_index = df[df['line'].str.contains(
+            "Características do Equipamento", case=False, na=False)].index
+
+        if not characteristics_index.empty:
+            next_lines = df.iloc[characteristics_index[0] +
+                                 1:characteristics_index[0] + 3]['line'].str.strip().tolist()
+
+            if len(next_lines) == 2 and next_lines[1].isdigit():
+                equipment_number = next_lines[0]
+                description_equipment = next_lines[1]
+                df = df.drop(
+                    df.index[characteristics_index[0] + 1:characteristics_index[0] + 3])
+            else:
+                df = df.drop(df.index[characteristics_index[0] + 1])
+
         extracted_fields = {
+            "equipment_number": equipment_number,
+            "description_equipment": description_equipment,
             "cost_center": find_value_after_label(df, "Centro de Custo", 11),
-            "criticality": find_value_after_label(df, "Criticidade", 11),
-            "installation_location": find_value_after_label(df, "Local de Instalação", 9),
-            "description_installation_location": find_value_after_label(df, "Descrição do Local de Instalação", 9),
-            "upper_installation_location": find_value_after_label(df, "Local de Instalação Superior", 7),
-            "description_upper_installation_location": find_value_after_label(df, "Descrição do Local de Instalação Superior", 7),
+            "criticality": find_value_after_label(df, "Criticidade", 10),
+            "installation_location": find_value_after_label(df, "Local de Instalação", 8),
+            "description_installation_location": find_value_after_label(df, "Descrição do Local de Instalação", 8),
+            "upper_installation_location": find_value_after_label(df, "Local de Instalação Superior", 6),
+            "description_upper_installation_location": find_value_after_label(df, "Descrição do Local de Instalação Superior", 6),
         }
+
         return extracted_fields
 
     except Exception as e:
