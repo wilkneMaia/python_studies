@@ -93,6 +93,8 @@ def extract_description(file_path, page_number):
     df = extract_maintenance_order_data(
         file_path, page_number, initial_data, final_data)
 
+    print("df:", df)
+
     if no_data(df):
         return {}
 
@@ -165,7 +167,9 @@ def find_value_after_label(df, label, offset=1):
 
 
 def extract_equipment_fields(file_path, page_number):
-    """Extracts equipment fields from the PDF."""
+    """
+    Extracts equipment fields from the PDF.
+    """
     initial_data = "OM"
     final_data = "ORDEM DE MANUTENÇÃO"
     df = extract_maintenance_order_data(
@@ -178,39 +182,46 @@ def extract_equipment_fields(file_path, page_number):
         # Inicializa os campos
         equipment_number = ""
         description_equipment = ""
+        cost_center = ""
+        criticality = ""
+        installation_location = ""
+        description_installation_location = ""
+        upper_installation_location = ""
+        description_upper_installation_location = ""
+        equipment_characteristics = ""
 
         # Verifica o valor da terceira linha
-        third_line = df.iloc[2]['line'].strip()
-        print("Valor da terceira linha:", third_line)
+        if len(df) > 2:
+            third_line = df.iloc[2]['line'].strip()
+            print("Valor da terceira linha:", third_line)
 
-        if third_line != "EQUIPAMENTO":
-            equipment_number = find_value_after_label(
-                df, "Número", 12)
-            description_equipment = find_value_after_label(
-                df, "Descrição Equipamento", 1)
-            cost_center = find_value_after_label(df, "Centro de Custo", 12)
-            criticality = find_value_after_label(df, "Criticidade", 12)
-            installation_location = find_value_after_label(
-                df, "Local de Instalação", 11)
-            description_installation_location = find_value_after_label(
-                df, "Descrição do Local de Instalação", 11)
-            upper_installation_location = find_value_after_label(
-                df, "Local de Instalação Superior", 9)
-            description_upper_installation_location = find_value_after_label(
-                df, "Descrição do Local de Instalação Superior", 9)
-        else:
-            equipment_number = ""
-            description_equipment = ""
-            cost_center = find_value_after_label(df, "Centro de Custo", 11)
-            criticality = find_value_after_label(df, "Criticidade", 11)
-            installation_location = find_value_after_label(
-                df, "Local de Instalação", 9)
-            description_installation_location = find_value_after_label(
-                df, "Descrição do Local de Instalação", 9)
-            upper_installation_location = find_value_after_label(
-                df, "Local de Instalação Superior", 7)
-            description_upper_installation_location = find_value_after_label(
-                df, "Descrição do Local de Instalação Superior", 7)
+            if third_line != "EQUIPAMENTO":
+                equipment_number = find_value_after_label(df, "Número", 12)
+                description_equipment = find_value_after_label(
+                    df, "Descrição Equipamento", 1)
+                cost_center = find_value_after_label(df, "Centro de Custo", 12)
+                criticality = find_value_after_label(df, "Criticidade", 12)
+                installation_location = find_value_after_label(
+                    df, "Local de Instalação", 11)
+                description_installation_location = find_value_after_label(
+                    df, "Descrição do Local de Instalação", 11)
+                upper_installation_location = find_value_after_label(
+                    df, "Local de Instalação Superior", 9)
+                description_upper_installation_location = find_value_after_label(
+                    df, "Descrição do Local de Instalação Superior", 9)
+                equipment_characteristics = find_value_after_label(
+                    df, "Características do Equipamento", 9)
+            else:
+                cost_center = find_value_after_label(df, "Centro de Custo", 11)
+                criticality = find_value_after_label(df, "Criticidade", 11)
+                installation_location = find_value_after_label(
+                    df, "Local de Instalação", 9)
+                description_installation_location = find_value_after_label(
+                    df, "Descrição do Local de Instalação", 9)
+                upper_installation_location = find_value_after_label(
+                    df, "Local de Instalação Superior", 7)
+                description_upper_installation_location = find_value_after_label(
+                    df, "Descrição do Local de Instalação Superior", 7)
 
         # Coleta os campos restantes
         extracted_fields = {
@@ -222,6 +233,7 @@ def extract_equipment_fields(file_path, page_number):
             "description_installation_location": description_installation_location,
             "upper_installation_location": upper_installation_location,
             "description_upper_installation_location": description_upper_installation_location,
+            "equipment_characteristics": equipment_characteristics
         }
 
         return extracted_fields
@@ -351,7 +363,8 @@ def main():
 
             if om and equipment_fields and order_fields and note_fields:
                 combined_data = combine_fields(
-                    om, equipment_fields, order_fields, note_fields)
+                    om, equipment_fields, order_fields, note_fields
+                )
                 all_combined_data.append(combined_data)
             else:
                 print(
