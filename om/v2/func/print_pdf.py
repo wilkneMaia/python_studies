@@ -50,7 +50,7 @@ def extract_maintenance_order_data(file_path, page_number, initial_data_regex, f
 if __name__ == "__main__":
     # Example of use
     file_path = '../pdf/OM_00.pdf'  # Path to the uploaded file
-    page_number = 1  # Page number you want to view
+    page_number = 67  # Page number you want to view
     # initial_data_regex = r'OM \d+'  # Regex to find initial data
     initial_data_regex = "ORDEM DE MANUTENÇÃO"
     final_data = "NOTA DE MANUTENÇÃO"
