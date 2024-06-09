@@ -93,8 +93,6 @@ def extract_description(file_path, page_number):
     df = extract_maintenance_order_data(
         file_path, page_number, initial_data, final_data)
 
-    print("df:", df)
-
     if no_data(df):
         return {}
 
@@ -112,8 +110,8 @@ def extract_description(file_path, page_number):
         return {}
 
 
-def extract_maintenance_order_data(file_path, page_number, initial_data, final_data):
-    """Extracts maintenance order data from the PDF between initial_data and final_data sections."""
+def extract_maintenance_order_data(file_path, page_number, initial_data_regex, final_data):
+    """Extracts maintenance order data from the PDF between initial_data_regex and final_data sections."""
     try:
         pdf_document = fitz.open(file_path)
 
@@ -124,6 +122,15 @@ def extract_maintenance_order_data(file_path, page_number, initial_data, final_d
 
         page = pdf_document.load_page(page_number)
         page_text = page.get_text()
+
+        # Use regex to find the initial data matching the provided regex
+        initial_data_match = re.search(initial_data_regex, page_text)
+        if not initial_data_match:
+            print(
+                f"Initial data matching regex '{initial_data_regex}' not found.")
+            return None
+
+        initial_data = initial_data_match.group()
         order_start = page_text.find(initial_data)
         note_start = page_text.find(final_data)
 
@@ -166,11 +173,24 @@ def find_value_after_label(df, label, offset=1):
         return None
 
 
+def verificar_texto_in(texto_maior, texto_especifico):
+    return texto_especifico in texto_maior
+
+
+def contains_om_number(text):
+    # Define a expressão regular para corresponder 'OM' seguido por qualquer número
+    pattern = r'OM \d+'
+    # Use a função search do módulo re para procurar a expressão no texto
+    match = re.search(pattern, text)
+    # Retorne True se encontrar uma correspondência, caso contrário, False
+    return bool(match)
+
+
 def extract_equipment_fields(file_path, page_number):
     """
     Extracts equipment fields from the PDF.
     """
-    initial_data = "OM"
+    initial_data = r'OM \d+'  # Regex to find initial data
     final_data = "ORDEM DE MANUTENÇÃO"
     df = extract_maintenance_order_data(
         file_path, page_number, initial_data, final_data)
@@ -192,10 +212,23 @@ def extract_equipment_fields(file_path, page_number):
 
         # Verifica o valor da terceira linha
         if len(df) > 2:
+            first_line = df.iloc[0]['line'].strip()
             third_line = df.iloc[2]['line'].strip()
-            print("Valor da terceira linha:", third_line)
 
-            if third_line != "EQUIPAMENTO":
+            if third_line == "EQUIPAMENTO":
+                # if third_line != "EQUIPAMENTO" and verificar_texto_in(first_line, 'OM ') == True:
+                cost_center = find_value_after_label(df, "Centro de Custo", 11)
+                criticality = find_value_after_label(df, "Criticidade", 11)
+                installation_location = find_value_after_label(
+                    df, "Local de Instalação", 9)
+                description_installation_location = find_value_after_label(
+                    df, "Descrição do Local de Instalação", 9)
+                upper_installation_location = find_value_after_label(
+                    df, "Local de Instalação Superior", 7)
+                description_upper_installation_location = find_value_after_label(
+                    df, "Descrição do Local de Instalação Superior", 7)
+
+            elif contains_om_number(first_line):
                 equipment_number = find_value_after_label(df, "Número", 12)
                 description_equipment = find_value_after_label(
                     df, "Descrição Equipamento", 1)
@@ -211,17 +244,6 @@ def extract_equipment_fields(file_path, page_number):
                     df, "Descrição do Local de Instalação Superior", 9)
                 equipment_characteristics = find_value_after_label(
                     df, "Características do Equipamento", 9)
-            else:
-                cost_center = find_value_after_label(df, "Centro de Custo", 11)
-                criticality = find_value_after_label(df, "Criticidade", 11)
-                installation_location = find_value_after_label(
-                    df, "Local de Instalação", 9)
-                description_installation_location = find_value_after_label(
-                    df, "Descrição do Local de Instalação", 9)
-                upper_installation_location = find_value_after_label(
-                    df, "Local de Instalação Superior", 7)
-                description_upper_installation_location = find_value_after_label(
-                    df, "Descrição do Local de Instalação Superior", 7)
 
         # Coleta os campos restantes
         extracted_fields = {
@@ -270,8 +292,17 @@ def extract_maintenance_order_fields(file_path, page_number):
         return {}
 
     try:
+        tem = "",
+        line = df.iloc[34]['line'].strip()
+
         tipo_manutencao = find_value_after_label(df, "Tipo de Manutenção", 18)
-        tipo_atividade = find_value_after_label(df, "Tipo de Atividade", 17)
+        tipo_atividade = find_value_after_label(df, "Tipo de Atividade", 18)
+
+        if line == "Status Sistema Ordem":
+            tem = find_value_after_label(df, "Equipe", 11)
+
+        else:
+            tem = find_value_after_label(df, "Equipe", 14)
 
         if tipo_manutencao == "Manutenção Corretiva não Reparo":
             tipo_manutencao = "Manutenção Corretiva"
@@ -288,10 +319,12 @@ def extract_maintenance_order_fields(file_path, page_number):
             "activity_type": tipo_atividade,
             "starting_point": find_value_after_label(df, "Ponto de Partida", 4),
             "length": find_value_after_label(df, "Comprimento", 4),
-            "operation_condition": find_value_after_label(df, "Condição de Operação", 11),
+            "plan_maintenance": find_value_after_label(df, "Plano de Manutenção", 16),
+            "plan_description": find_value_after_label(df, "Descrição do Plano", 16),
+            "operation_condition": find_value_after_label(df, "Condição de Operação", 14),
             "order_system_status": find_value_after_label(df, "Status Sistema Ordem", 2),
             "order_user_status": find_value_after_label(df, "Status Usuário Ordem", 2),
-            "team": find_value_after_label(df, "Equipe", 11),
+            "team": tem,
         }
         return extracted_fields
 
@@ -300,41 +333,12 @@ def extract_maintenance_order_fields(file_path, page_number):
         return {}
 
 
-def extract_maintenance_note_fields(file_path, page_number):
-    """Extracts maintenance note fields from the PDF."""
-    initial_data = "NOTA DE MANUTENÇÃO"
-    final_data = "DETALHAMENTO DA ORDEM"
-    df = extract_maintenance_order_data(
-        file_path, page_number, initial_data, final_data)
-
-    if no_data(df):
-        return {}
-
-    try:
-        extracted_fields = {
-            "note": find_value_after_label(df, "Nota", 6),
-            "description": find_value_after_label(df, "Descrição", 5),
-            "request_date": find_value_after_label(df, "Data Solicitação", 6),
-            "author": find_value_after_label(df, "Autor", 6),
-            "other_requests": find_value_after_label(df, "Outras Solicitações", 6),
-        }
-        return extracted_fields
-
-    except Exception as e:
-        print(f"Error extracting fields: {e}")
-        return {}
-
-
-def combine_fields(description_fields, equipment_fields, order_fields, note_fields):
-    """Combines description, equipment, maintenance order, and maintenance note fields into a single dictionary."""
+def combine_fields(om, equipment_fields, order_fields):
+    """Combines equipment, maintenance order, and maintenance note fields into a single dictionary."""
     combined_data = {
-        "om": description_fields.get("om", ""),
-        "issue_center": description_fields.get("issue_center", ""),
-        "center_plant": description_fields.get("center_plant", ""),
-        "om_description": description_fields.get("om_description", ""),
-        **equipment_fields,
-        **order_fields,
-        **note_fields
+        "om": om,
+        "equipment_fields": equipment_fields,
+        "order_fields": order_fields
     }
     return combined_data
 
@@ -350,7 +354,7 @@ def save_to_json(data, file_name):
 
 
 def main():
-    input_pdf_path = './pdf/OM_00.pdf'
+    input_pdf_path = './pdf/OM_01.pdf'
     marker = "PERMISSÃO DE TRABALHO SEGURO"
     output_dir = "./output_pdfs"
 
@@ -362,11 +366,10 @@ def main():
             om = description_fields.get("om", f"document_{idx + 1}")
             equipment_fields = extract_equipment_fields(file_path, 1)
             order_fields = extract_maintenance_order_fields(file_path, 1)
-            note_fields = extract_maintenance_note_fields(file_path, 1)
 
-            if om and equipment_fields and order_fields and note_fields:
+            if om and equipment_fields and order_fields:
                 combined_data = combine_fields(
-                    description_fields, equipment_fields, order_fields, note_fields
+                    om, equipment_fields, order_fields
                 )
                 all_combined_data.append(combined_data)
             else:
