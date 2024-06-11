@@ -21,7 +21,7 @@ def combine_fields(description_fields, equipment_fields, order_fields):
 
 
 def main():
-    input_pdf_path = '../v2/pdf/OM_01.pdf'
+    input_pdf_path = '../v2/pdf/OM_00.pdf'
     marker = "PERMISSÃO DE TRABALHO SEGURO"
     output_dir = "./output_pdfs"
 

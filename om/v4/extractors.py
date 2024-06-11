@@ -70,7 +70,6 @@ def extract_equipment_fields(file_path, page_number):
         return {}
 
     try:
-
         columns_mapping = {
             "equipment_number": 12,
             "description_equipment": 1,
@@ -112,21 +111,24 @@ def extract_equipment_fields(file_path, page_number):
                     df, "Descrição do Local de Instalação Superior", 7)
 
             elif contains_om_number(first_line):
-                equipment_number = find_value_after_label(df, "Número", 12)
+                equipment_number = find_value_after_label(
+                    df, "Número", columns_mapping["equipment_number"])
                 description_equipment = find_value_after_label(
-                    df, "Descrição Equipamento", 1)
-                cost_center = find_value_after_label(df, "Centro de Custo", 12)
-                criticality = find_value_after_label(df, "Criticidade", 12)
+                    df, "Descrição Equipamento", columns_mapping["description_equipment"])
+                cost_center = find_value_after_label(
+                    df, "Centro de Custo", columns_mapping["cost_center"])
+                criticality = find_value_after_label(
+                    df, "Criticidade", columns_mapping["criticality"])
                 installation_location = find_value_after_label(
-                    df, "Local de Instalação", 11)
+                    df, "Local de Instalação", columns_mapping["installation_location"])
                 description_installation_location = find_value_after_label(
-                    df, "Descrição do Local de Instalação", 11)
+                    df, "Descrição do Local de Instalação", columns_mapping["description_installation_location"])
                 upper_installation_location = find_value_after_label(
-                    df, "Local de Instalação Superior", 9)
+                    df, "Local de Instalação Superior", columns_mapping["upper_installation_location"])
                 description_upper_installation_location = find_value_after_label(
-                    df, "Descrição do Local de Instalação Superior", 9)
+                    df, "Descrição do Local de Instalação Superior", columns_mapping["description_upper_installation_location"])
                 equipment_characteristics = find_value_after_label(
-                    df, "Características do Equipamento", 9)
+                    df, "Características do Equipamento", columns_mapping["equipment_characteristics"])
 
         # Coleta os campos restantes
         extracted_fields = {
