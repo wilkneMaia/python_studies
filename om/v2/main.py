@@ -383,7 +383,7 @@ def save_to_json(data, file_name):
 
 
 def main():
-    input_pdf_path = './pdf/combined_document.pdf'
+    input_pdf_path = './pdf/OM_01.pdf'
     marker = "PERMISSÃO DE TRABALHO SEGURO"
     output_dir = "./output_pdfs"
 
