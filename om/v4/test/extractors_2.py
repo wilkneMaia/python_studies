@@ -1,6 +1,6 @@
 import re
 
-from om.v4.pdf_processing_2 import extract_maintenance_order_data
+from om.v4.test.pdf_processing_2 import extract_maintenance_order_data
 from utils import no_data
 
 
