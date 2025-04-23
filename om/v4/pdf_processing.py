@@ -1,9 +1,7 @@
 import os
-
 import fitz  # PyMuPDF
 
-from helpers import extract_maintenance_order_data
-from helpers import find_value_after_label
+from helpers import extract_maintenance_order_data, find_value_after_label
 from PyPDF3 import PdfFileReader
 from utils import create_directory
 from utils import save_pdf_range

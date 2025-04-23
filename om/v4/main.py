@@ -1,5 +1,4 @@
-from extractors import extract_equipment_fields
-from extractors import extract_maintenance_order_fields
+from extractors import extract_maintenance_order_fields ,extract_equipment_fields
 from pdf_processing import process_pdf
 from utils import save_to_excel
 from utils import save_to_json
@@ -30,6 +29,7 @@ def main():
 
     for idx, (file_path, description_fields) in enumerate(separated_texts):
         try:
+            print(f"Processing file {idx + 1} of {len(separated_texts)}")
             om = description_fields.get("om", f"document_{idx + 1}")
             equipment_fields = extract_equipment_fields(file_path, 1)
             order_fields = extract_maintenance_order_fields(file_path, 1)
